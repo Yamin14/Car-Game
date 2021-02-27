@@ -17,7 +17,6 @@ speed, acc = 0, 0.01
 right, left = False, False
 max_distance = 300
 turn_speed = 0.7
-enemies = []
 en_x, en_y = [], []
 en_speed = 0.25
 num_en = 3
@@ -52,20 +51,6 @@ def game():
             num_en += 1
             blacklist.append(i)
 
-    # game over
-    for i in enemies:
-        if player.colliderect(i) == True:
-            while running:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        running = False
-                font = pygame.font.Font('freesansbold.ttf', 70)
-                text = font.render("Game Over!", True, (255, 0, 0), (0, 0, 0))
-                textRect = text.get_rect()
-                textRect.center = (screen_width/2, screen_height/2)
-                screen.blit(text, textRect)
-                pygame.display.flip()
-
 while running:
     screen.fill((140, 140, 140))
     for event in pygame.event.get():
@@ -94,11 +79,24 @@ while running:
 
     # drawing enemy cars
     for i in range(num_en):
-        enemies.append(pygame.draw.rect(screen, enemy_color, (en_x[i], en_y[i], car_width, car_height)))
+        en_rect = pygame.draw.rect(screen, enemy_color, (en_x[i], en_y[i], car_width, car_height))
         pygame.draw.rect(screen, black, (en_x[i] - tyre_width, en_y[i], tyre_width, tyre_height))
         pygame.draw.rect(screen, black, (en_x[i] + car_width, en_y[i], tyre_width, tyre_height))
         pygame.draw.rect(screen, black, (en_x[i] - tyre_width, en_y[i] + car_height - tyre_height - 10, tyre_width, tyre_height))
         pygame.draw.rect(screen, black, (en_x[i] + car_width, en_y[i] + car_height - tyre_height - 10, tyre_width, tyre_height))
+
+    # game over
+        if player.colliderect(en_rect) == True:
+            while running:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
+                font = pygame.font.Font('freesansbold.ttf', 70)
+                text = font.render("Game Over!", True, (255, 0, 0), (0, 0, 0))
+                textRect = text.get_rect()
+                textRect.center = (screen_width / 2, screen_height / 2)
+                screen.blit(text, textRect)
+                pygame.display.flip()
 
     game()
     pygame.display.flip()
